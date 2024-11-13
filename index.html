@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fruit Identifier</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            text-align: center;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 500px;
+        }
+
+        h1 {
+            font-size: 2em;
+            margin-bottom: 20px;
+        }
+
+        p {
+            font-size: 1.2em;
+            margin-bottom: 20px;
+        }
+
+        input[type="file"] {
+            margin-bottom: 20px;
+        }
+
+        #result {
+            margin-top: 20px;
+            display: none;
+        }
+
+        #prediction {
+            font-size: 1.5em;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        #imageName {
+            font-size: 1.2em;
+            color: #555;
+        }
+
+        img {
+            margin-top: 20px;
+            max-width: 100%;
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Fruit Image Identifier</h1>
+        <p>Select an image of an Apple, Banana, or Orange to identify it:</p>
+        
+        <form id="imageForm" enctype="multipart/form-data">
+            <input type="file" id="imageInput" accept="image/*" onchange="identifyFruit()">
+        </form>
+
+        <div id="result">
+            <h3 id="prediction">Prediction: </h3>
+            <p id="imageName"></p>
+            <img id="fruitImage" src="" alt="" style="max-width: 300px; display: none;">
+        </div>
+    </div>
+
+    <script>
+        function identifyFruit() {
+            const fileInput = document.getElementById('imageInput');
+            const file = fileInput.files[0];
+
+            if (file) {
+                const fileName = file.name.toLowerCase();
+                const resultElement = document.getElementById('result');
+                const predictionElement = document.getElementById('prediction');
+                const imageNameElement = document.getElementById('imageName');
+                const fruitImageElement = document.getElementById('fruitImage');
+
+                // Display the uploaded image
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    fruitImageElement.src = event.target.result;
+                    fruitImageElement.style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+
+                // Check the file name to determine the fruit
+                if (fileName.includes('apple')) {
+                    predictionElement.textContent = 'Prediction: Apple';
+                    imageNameElement.textContent = 'This is an Apple.';
+                } else if (fileName.includes('banana')) {
+                    predictionElement.textContent = 'Prediction: Banana';
+                    imageNameElement.textContent = 'This is a Banana.';
+                } else if (fileName.includes('orange')) {
+                    predictionElement.textContent = 'Prediction: Orange';
+                    imageNameElement.textContent = 'This is an Orange.';
+                } else {
+                    predictionElement.textContent = 'Prediction: Unknown';
+                    imageNameElement.textContent = 'Could not identify the fruit based on the image name.';
+                }
+
+                resultElement.style.display = 'block';
+            }
+        }
+    </script>
+
+</body>
+</html>
