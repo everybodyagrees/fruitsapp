@@ -61,6 +61,14 @@
             max-width: 100%;
             height: auto;
         }
+
+        /* Loading Spinner Styles */
+        #loading {
+            display: none;
+            margin-top: 20px;
+            font-size: 1.2em;
+            color: #888;
+        }
     </style>
 </head>
 <body>
@@ -72,6 +80,9 @@
         <form id="imageForm" enctype="multipart/form-data">
             <input type="file" id="imageInput" accept="image/*" onchange="identifyFruit()">
         </form>
+
+        <!-- Loading spinner while waiting for the result -->
+        <div id="loading">Processing...</div>
 
         <div id="result">
             <h3 id="prediction">Prediction: </h3>
@@ -86,13 +97,16 @@
             const file = fileInput.files[0];
 
             if (file) {
-                const fileName = file.name.toLowerCase();
-                const resultElement = document.getElementById('result');
-                const predictionElement = document.getElementById('prediction');
-                const imageNameElement = document.getElementById('imageName');
-                const fruitImageElement = document.getElementById('fruitImage');
+                // Show the loading message
+                const loadingElement = document.getElementById('loading');
+                loadingElement.style.display = 'block';
 
-                // Display the uploaded image
+                // Hide previous results
+                const resultElement = document.getElementById('result');
+                resultElement.style.display = 'none';
+
+                // Show the uploaded image
+                const fruitImageElement = document.getElementById('fruitImage');
                 const reader = new FileReader();
                 reader.onload = function(event) {
                     fruitImageElement.src = event.target.result;
@@ -100,22 +114,31 @@
                 };
                 reader.readAsDataURL(file);
 
-                // Check the file name to determine the fruit
-                if (fileName.includes('apple')) {
-                    predictionElement.textContent = 'Prediction: Apple';
-                    imageNameElement.textContent = 'This is an Apple.';
-                } else if (fileName.includes('banana')) {
-                    predictionElement.textContent = 'Prediction: Banana';
-                    imageNameElement.textContent = 'This is a Banana.';
-                } else if (fileName.includes('orange')) {
-                    predictionElement.textContent = 'Prediction: Orange';
-                    imageNameElement.textContent = 'This is an Orange.';
-                } else {
-                    predictionElement.textContent = 'Prediction: Unknown';
-                    imageNameElement.textContent = 'Could not identify the fruit based on the image name.';
-                }
+                // Simulate a delay of 3-5 seconds to mimic server processing
+                setTimeout(() => {
+                    // Once the delay is over, hide the loading message and show the result
+                    loadingElement.style.display = 'none';
+                    resultElement.style.display = 'block';
 
-                resultElement.style.display = 'block';
+                    const fileName = file.name.toLowerCase();
+                    const predictionElement = document.getElementById('prediction');
+                    const imageNameElement = document.getElementById('imageName');
+
+                    // Check the file name to determine the fruit
+                    if (fileName.includes('apple')) {
+                        predictionElement.textContent = 'Prediction: Apple';
+                        imageNameElement.textContent = 'This is an Apple.';
+                    } else if (fileName.includes('banana')) {
+                        predictionElement.textContent = 'Prediction: Banana';
+                        imageNameElement.textContent = 'This is a Banana.';
+                    } else if (fileName.includes('orange')) {
+                        predictionElement.textContent = 'Prediction: Orange';
+                        imageNameElement.textContent = 'This is an Orange.';
+                    } else {
+                        predictionElement.textContent = 'Prediction: Unknown';
+                        imageNameElement.textContent = 'Could not identify the fruit based on the image name.';
+                    }
+                }, Math.floor(Math.random() * 2000) + 3000); // Random delay between 3-5 seconds
             }
         }
     </script>
